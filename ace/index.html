@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cymbol editor created with ANTLR4 and ACE</title>
+  <style type="text/css">
+    #editor {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="editor">/* toy model */
+
+proc sort data=sdtm.dm out=dm;
+    by usubjid;
+run;
+
+proc sort data=sdtm.ae out=ae;
+    by usubjid aestdtc;
+run;
+
+proc sort data=sdtm.sv out=sv;
+    by usubjid;
+run;
+
+data ae2;
+    merge dm ae;
+    by usubjid;
+run;
+
+data mess;
+    set dm ae2 sv;
+    a = 3.14
+    b = 5;
+    f = power(1;
+    g = left(trimn(put(round(3.14), best13.4));
+    c = .12345;
+
+    /* multiline parsed correctly, but Ace tokenize line-by-line */
+    s = '
+        data abc;
+            set a b c;
+            set d;
+            ss = ''
+                data aabbcc;
+                    set aa bb cc;
+                run;
+            '';
+        run;
+    ';
+run;
+
+proc sort data=ae2;
+    by usubjid aestdtc aeendtc;
+run;
+
+data mess2;
+    merge mess ae2;
+    by usubjid;
+    set ads.adlb(where=(paramcd='BACT' and visit = 'Screening')) key=keyvar / unique;
+run;
+
+data mess2;
+    set mess2;
+    paramcd = 'BACTERIA';
+run;
+
+proc sort data=mess2 out=result;
+    by usubjid svdtc;
+run;</div>
+  <script src="ace.js"></script>
+  <script src="require.js"></script>
+  <script src="bundle.js"></script>
+</body>
+</html>
