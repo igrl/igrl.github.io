@@ -6,21 +6,56 @@
   <title>Editor</title>
   <style type="text/css" media="screen">
     body {
-        overflow: hidden;
+      overflow: hidden;
     }
 
     #editor {
-        margin: 0;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+      margin: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    /* https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/devtools/front_end/Images/errorWave.png
+
+    .CodeMirror .text-editor-line-decoration-wave {
+    https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/devtools/front_end/text_editor/cmdevtools.css
+    */
+
+    .myCustomMouseOverHighlight {
+      border-bottom: 1px solid red;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      position: absolute;
+      cursor: pointer !important;
+      pointer-events: auto;
+      /*
+      https://stackoverflow.com/a/33451275/5282412
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: red;
+      text-decoration-style: wavy;
+      */
+      /*
+      background-image: url(errorWave.png);
+      background-repeat: repeat-x;
+      background-size: contain;
+      */
+    }
+
+    .myCustomMouseOverHighlight2 {
+      position: absolute;
+      z-index: 4;
+      background: rgb(181, 213, 255);\
     }
   </style>
 </head>
 <body>
-<pre id="editor">/* toy model */
+<pre id="editor">/* toy
+milti-
+line      model */
 
 proc sort data=sdtm.dm out=dm;
     by usubjid;
@@ -69,6 +104,7 @@ data mess2;
     merge mess ae2;
     by usubjid;
     set ads.adlb(where=(paramcd='BACT' and visit = 'Screening')) key=keyvar / unique;
+    data = 123;
 run;
 
 data mess2;
@@ -78,7 +114,12 @@ run;
 
 proc sort data=mess2 out=result;
     by usubjid svdtc;
-run;</pre>
+run;
+
+data _null_;
+    a = 'usubjid' in asdasd;
+run;
+</pre>
 <script src="bundle.js"></script>
 </body>
 </html>
