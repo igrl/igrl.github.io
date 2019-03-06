@@ -25,30 +25,36 @@
     */
 
     .myCustomMouseOverHighlight {
-      border-bottom: 1px solid red;
+      border-bottom: 1.5px solid red;
       border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
       position: absolute;
-      cursor: pointer !important;
+      /*cursor: pointer !important;*/
       pointer-events: auto;
-      /*
-      https://stackoverflow.com/a/33451275/5282412
-      color: inherit;
-      text-decoration: underline;
-      text-decoration-color: red;
-      text-decoration-style: wavy;
-      */
-      /*
-      background-image: url(errorWave.png);
-      background-repeat: repeat-x;
-      background-size: contain;
-      */
     }
 
     .myCustomMouseOverHighlight2 {
       position: absolute;
       z-index: 4;
-      background: rgb(181, 213, 255);\
+      background: rgb(181, 213, 255);
+    }
+
+    /*
+    https://stackoverflow.com/a/33451275/5282412
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: red;
+    text-decoration-style: wavy;
+    */
+    /*
+    background-image: url(errorWave.png);
+    background-repeat: repeat-x;
+    background-size: contain;
+    */
+
+    .errorWave {
+      background: url(errorWave.png) bottom repeat-x;
+      position: absolute;
     }
   </style>
 </head>
@@ -99,6 +105,8 @@ run;
 proc sort data=ae2;
     by usubjid aestdtc aeendtc;
 run;
+
+foo
 
 data mess2;
     merge mess ae2;
