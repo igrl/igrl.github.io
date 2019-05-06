@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Editor</title>
+  <title>Ace editor with SAS mode</title>
   <style type="text/css" media="screen">
     body {
       overflow: hidden;
@@ -59,28 +59,7 @@
   </style>
 </head>
 <body>
-<pre id="editor">/* toy
-milti-
-line      model */
-
-proc sort data=sdtm.dm out=dm;
-    by usubjid;
-run;
-
-proc sort data=sdtm.ae out=ae;
-    by usubjid aestdtc;
-run;
-
-proc sort data=sdtm.sv out=sv;
-    by usubjid;
-run;
-
-data ae2;
-    merge dm ae;
-    by usubjid;
-run;
-
-data mess;
+<pre id="editor">data mess;
     set dm ae2 sv;
     a = 3.14
     b = 5;
@@ -100,6 +79,15 @@ data mess;
             '';
         run;
     ';
+
+    /* keywords as identifiers */
+    if = 1; and = 0;
+    if if eq and and and eq if then
+      put 'if = and';
+    else
+      put 'if ^= and';
+
+    data = "data as a variable name";
 run;
 
 proc sort data=ae2;
@@ -108,25 +96,15 @@ run;
 
 foo
 
-data mess2;
-    merge mess ae2;
-    by usubjid;
-    set ads.adlb(where=(paramcd='BACT' and visit = 'Screening')) key=keyvar / unique;
-    data = 123;
-run;
-
-data mess2;
-    set mess2;
-    paramcd = 'BACTERIA';
-run;
-
-proc sort data=mess2 out=result;
-    by usubjid svdtc;
-run;
-
-data _null_;
-    a = 'usubjid' in asdasd;
-run;
+DATA cldata;
+   INPUT sid excerpt $60.;
+   DATALINES4;
+1  Clinical graph,; 2050
+2  SAS/GRAPH ODS HTML., 2021; EG, 2019
+3  SAS Studio, 2020; Base SAS, 2050; SAS/ACCESS, 3050
+2  SAS/GRAPH
+;;;;
+RUN;
 </pre>
 <script src="bundle.js"></script>
 </body>

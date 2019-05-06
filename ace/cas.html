@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Ace editor with SAS mode</title>
+  <style type="text/css" media="screen">
+    body {
+      overflow: hidden;
+    }
+
+    #editor {
+      margin: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .myCustomMouseOverHighlight {
+      border-bottom: 1.5px solid red;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      position: absolute;
+      /*cursor: pointer !important;*/
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+<pre id="editor">cas session sessopts=(caslib=casuser timeout=1800 locale="en_US");
+
+cas _all_ list;
+caslib _all_ assign;
+
+
+libname homelib "/home/falko";
+
+libname data "/pub/html/veeare/falko";
+
+/* clean up at source */
+
+data data.tweet_network;
+  set homelib.tweet_network;
+/*   where strip(from_id) ne " " or strip(to_id) ne " "; */
+  where tweet_count > 0 and (length(strip(from_id)) > 1 or length(strip(to_id)) > 1 or length(strip(user_screen_name)) > 1 );
+  run;
+
+
+proc casutil outcaslib="casuser";
+    droptable casdata="tweet_network";
+    load data=data.tweet_network casdata="tweet_network";
+    promote casdata="tweet_network";
+run;quit;
+proc cas;
+    builtins.loadactionset /
+        actionSet="hyperGroup"
+        ttt=123;
+    ACTION some_unsupported /
+        foo = 3.14
+        baz = 123
+        bar = true;
+    hyperGroup.hypergroup  /
+        allGraphs       = true,
+        createOut       = "NEVER",
+
+        /* value is not correct
+         * CENTRALITY supports TRUE / FALSE
+         */
+        centrality      = 123,
+
+        scaleCentralities = "CENTRAL1", /* higher centrality values are closer to 1 */
+        community       = true,
+        threeD          = true,
+        select          = {foo="bar", m="string"} /* this parameter is not supported within this CAS action */
+        graphPartition  = true,
+        maxNodes        = 100,
+        inputs          = {{name="222"},{name="to_id"}},
+        copyVars        = {"user_screen_name","user_name", "user_description", "user_followers_count","user_friends_count","tweet_count"}
+        table           = {name="tweet_network", where="to_id ne ''"},
+        edges           = {name="tweet_network_edges", replace=true},
+        vertices        = {name="tweet_network_nodes", replace=true}
+;run;quit;
+proc sql;
+  create table stripped_tweet_nodes as
+    select
+        _index_,
+        _allxcoord_, _allycoord_, _allzcoord_,
+        _betweenness_ as Betweenness,
+        _stress_ as Stress,
+        _closeness_ as Closeness,
+        _centroidmag_ as Centroid,
+        _reach_ as Reach,
+        _community_ as Community,
+        _color_ as Color,
+         b.user_screen_name as user_id,
+/*         "ffs" as user_id, */
+/*           ksubstr(b.user_description, 1, 2) as description,   */
+          b.user_description as description,
+/*          "ffs" as description,  */
+        b.user_followers_count as followers,
+        b.user_friends_count as friends
+    from casuser.tweet_network_nodes a
+        left join
+        (
+            select distinct _sindex_, user_screen_name, user_description, user_followers_count, user_friends_count
+            from    casuser.tweet_network_edges
+            where user_screen_name not in ('zimei_no_ri','SekwazZ','Jai_Bhim_jaijai','ramkumarmathura','SASJapan','arthursIegacy','PhilReedData','EdWallaceIA','HmD_tech','Rovio_Red','navymooon','mittelfield')
+        ) b
+        on a._index_ eq b._sindex_
+/*      where not user_id is missing   */
+/*          where not user_id in ('zimei_no_ri','SekwazZ','Jai_Bhim_jaijai')   */
+         where not user in ('zimei_no_ri','SekwazZ','Jai_Bhim_jaijai','ramkumarmathura','SASJapan','arthursIegacy','PhilReedData','EdWallaceIA','HmD_tech','Rovio_Red','navymooon','mittelfield')
+
+;run;quit;
+
+
+
+proc sql;
+  create table stripped_tweet_edges as
+    select distinct _sindex_, _tindex_, sum(tweet_count) as weight
+    from casuser.tweet_network_edges
+    group by _sindex_, _tindex_;
+quit;
+filename json "/pub/html/veeare/falko/tweet_network_mar19_nodes.json" encoding="utf-8";
+proc json out=json;
+  export stripped_tweet_nodes / nosastags;
+run;
+filename json "/pub/html/veeare/falko/tweet_network_mar19_edges.json" encoding="utf-8";
+proc json out=json;
+  export stripped_tweet_edges / nosastags;
+run;
+filename json;
+/* stop each CAS sessions */
+cas session terminate;
+</pre>
+<script src="bundle.js"></script>
+</body>
+</html>
