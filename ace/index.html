@@ -18,12 +18,6 @@
       right: 0;
     }
 
-    /* https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/devtools/front_end/Images/errorWave.png
-
-    .CodeMirror .text-editor-line-decoration-wave {
-    https://github.com/chromium/chromium/blob/master/third_party/blink/renderer/devtools/front_end/text_editor/cmdevtools.css
-    */
-
     .myCustomMouseOverHighlight {
       border-bottom: 1.5px solid red;
       border-bottom-right-radius: 0;
@@ -39,22 +33,27 @@
       background: rgb(181, 213, 255);
     }
 
-    /*
-    https://stackoverflow.com/a/33451275/5282412
-    color: inherit;
-    text-decoration: underline;
-    text-decoration-color: red;
-    text-decoration-style: wavy;
-    */
-    /*
-    background-image: url(errorWave.png);
-    background-repeat: repeat-x;
-    background-size: contain;
-    */
+    .myCustomMouseOverHighlight3 {
+        position: absolute;
+        background-image: url(wave_underline.svg);
+        background-repeat: repeat-x;
+        background-size: contain;
+        background-position: bottom;
+    }
 
-    .errorWave {
-      background: url(errorWave.png) bottom repeat-x;
+    .myCustomMouseOverHighlight4 {
       position: absolute;
+    }
+
+    .myCustomMouseOverHighlight4::before {
+      content: '';
+      position: absolute;
+      top: 90%;
+      width: 100%;
+      height: 0.25em;
+      background: linear-gradient(135deg, transparent, transparent 45%, #dc3912, transparent 55%, transparent 100%), linear-gradient(45deg, transparent, transparent 45%, #dc3912, transparent 55%, transparent 100%);
+      background-size: 0.5em 0.5em;
+      background-repeat: repeat-x, repeat-x;
     }
   </style>
 </head>
@@ -66,6 +65,7 @@
     f = power(1;
     g = left(trimn(put(round(3.14), best13.4));
     c = .12345;
+    d = ;
 
     /* multiline parsed correctly, but Ace tokenize line-by-line */
     s = '
