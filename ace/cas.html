@@ -29,40 +29,38 @@
   </style>
 </head>
 <body>
-<pre id="editor">proc cas;
-  builtins.loadactionset /
-    actionSet = "hyperGroup"
-    ttt       = 123;
+<pre id="editor">builtins.loadactionset /
+  actionSet = "hyperGroup"
+  ttt       = 123;
 
-  action some_unsupported /
-    foo = 3.14
-    baz = 123
-    bar = true;
+action some_unsupported /
+  foo = 3.14
+  baz = 123
+  bar = true;
 
-  hyperGroup.hypergroup  /
-    allGraphs         = true,
-    createOut         = "NEVER",
+hyperGroup.hypergroup  /
+  allGraphs         = true,
+  createOut         = "NEVER",
 
-    /* value is not correct
-     * CENTRALITY supports TRUE / FALSE
-     */
-    centrality        = 123,
+  /* value is not correct
+   * CENTRALITY supports TRUE / FALSE
+   */
+  centrality        = 123,
 
-    /* `Ctrl + Space` for autocompletion */
+  /* `Ctrl + Space` for autocompletion, e.g. try `noColourStrlCoord` */
 
-    scaleCentralities = "CENTRAL1" /* higher centrality values are closer to 1 */
-    community         = true,
-    threeD            = true,
-    select            = {foo="bar", m="string"} /* this parameter is not supported within this CAS action */
-    graphPartition    = true,
-    maxNodes          = 100,
-    inputs            = {{name="222"}, {name="to_id"}},
-    copyVars          = {"user_screen_name","user_name", "user_description", "user_followers_count","user_friends_count","tweet_count"},
-    table             = {name="tweet_network", where="to_id ne ''"},
-    edges             = {name="tweet_network_edges", replace=true},
-    vertices          = {name="tweet_network_nodes", replace=true};
-quit;
+  scaleCentralities = "CENTRAL1" /* higher centrality values are closer to 1 */
+  community         = true,
+  threeD            = true,
+  select            = {foo="bar", m="string"} /* this parameter is not supported within this CAS action */
+  graphPartition    = true,
+  maxNodes          = 100,
+  inputs            = {{name="222"}, {name="to_id"}},
+  copyVars          = {"user_screen_name","user_name", "user_description", "user_followers_count","user_friends_count","tweet_count"},
+  table             = {name="tweet_network", where="to_id ne ''"},
+  edges             = {name="tweet_network_edges", replace=true},
+  vertices          = {name="tweet_network_nodes", replace=true};
 </pre>
-<script src="bundle.js"></script>
+<script src="casl.bundle.js"></script>
 </body>
 </html>
